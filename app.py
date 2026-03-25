@@ -673,6 +673,12 @@ if st.button("⚡ Analyze Message", type="primary", use_container_width=True):
                     result = process_message(message, model_name=selected_model)
                 display_result(result)
         except RuntimeError as e:
-            st.error(f"❌ Pipeline error: {e}")
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                st.error("⚠️ API rate limit reached. The free tier has a daily request cap. Please try again in a few minutes or try a different model from the sidebar.")
+            else:
+                st.error(f"❌ Pipeline error: {e}")
         except Exception as e:
-            st.error(f"❌ Unexpected error: {e}")
+            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
+                st.error("⚠️ API rate limit reached. The free tier has a daily request cap. Please try again in a few minutes or try a different model from the sidebar.")
+            else:
+                st.error(f"❌ Unexpected error: {e}")
