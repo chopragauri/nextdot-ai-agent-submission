@@ -508,12 +508,17 @@ else:
     .reasoning-box { color: #374151 !important; }
     /* Subtitle */
     .neon-subtitle { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
-    /* Spinner / loading text */
-    .stSpinner > div, .stSpinner > div > div,
-    .stSpinner p, .stSpinner span,
-    div[data-testid="stSpinner"] p,
-    div[data-testid="stSpinner"] span {
+    /* Spinner / loading text — force visible in light mode */
+    .stSpinner, .stSpinner *,
+    div[data-testid="stSpinner"], div[data-testid="stSpinner"] *,
+    .stAlert, .stAlert *,
+    div[data-testid="stStatusWidget"], div[data-testid="stStatusWidget"] * {
         color: #1e293b !important;
+    }
+    /* Spinner icon color */
+    .stSpinner svg, div[data-testid="stSpinner"] svg {
+        fill: #2563eb !important;
+        stroke: #2563eb !important;
     }
     /* Radio buttons (theme selector) */
     .stRadio label span, .stRadio label p,
