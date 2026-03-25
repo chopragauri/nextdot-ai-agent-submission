@@ -2,8 +2,6 @@
 
 An AI-powered customer message analysis pipeline that classifies, extracts structured data, generates empathetic replies, and explains its own reasoning — all driven by an LLM with no hardcoded logic.
 
-Built for the **Nextdot AI Engineering Internship** — Round 1 Assignment.
-
 **Live Demo:** [Streamlit Cloud App](https://chopragauri-nextdot-ai-agent-submission-app-znyb14.streamlit.app/)
 
 ## Features
