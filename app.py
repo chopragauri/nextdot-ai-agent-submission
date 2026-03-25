@@ -562,12 +562,14 @@ for i, (key, sample) in enumerate(SAMPLES.items()):
 
 # --- Message Input ---
 st.markdown("### ✍️ Enter Customer Message")
-message = st.text_area(
-    "Paste or type a customer message below:",
-    value=st.session_state.get("input_message", ""),
-    height=120,
-    placeholder="e.g., I ordered the premium plan 3 weeks ago and STILL haven't received access...",
-)
+with st.form("analyze_form", clear_on_submit=False):
+    message = st.text_area(
+        "Paste or type a customer message below:",
+        value=st.session_state.get("input_message", ""),
+        height=120,
+        placeholder="e.g., I ordered the premium plan 3 weeks ago and STILL haven't received access...",
+    )
+    submitted = st.form_submit_button("⚡ Analyze Message", type="primary", use_container_width=True)
 
 
 def display_result(result: dict, title: str = ""):
@@ -644,7 +646,7 @@ def display_result(result: dict, title: str = ""):
 
 
 # --- Run Pipeline ---
-if st.button("⚡ Analyze Message", type="primary", use_container_width=True):
+if submitted:
     if not message or not message.strip():
         st.error("⚠️ Please enter a customer message to analyze.")
     else:
