@@ -4,6 +4,13 @@ An AI-powered customer message analysis pipeline that classifies, extracts struc
 
 **Live Demo:** [Streamlit Cloud App](https://chopragauri-nextdot-ai-agent-submission-app-znyb14.streamlit.app/)
 
+## Dashboard
+
+| | |
+|---|---|
+| ![Dashboard](assets/dash1.jpeg) | ![Classification & Extraction](assets/dash2.jpeg) |
+| ![Reply & Reasoning](assets/dash3.jpeg) | ![Raw JSON Output](assets/dash4.jpeg) |
+
 ## Features
 
 - **4-step pipeline**: Classify → Extract → Reply → Explain Reasoning
