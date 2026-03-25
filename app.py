@@ -508,6 +508,21 @@ else:
     .reasoning-box { color: #374151 !important; }
     /* Subtitle */
     .neon-subtitle { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
+    /* Spinner / loading text */
+    .stSpinner > div, .stSpinner > div > div,
+    .stSpinner p, .stSpinner span,
+    div[data-testid="stSpinner"] p,
+    div[data-testid="stSpinner"] span {
+        color: #1e293b !important;
+    }
+    /* Radio buttons (theme selector) */
+    .stRadio label span, .stRadio label p,
+    .stRadio div[role="radiogroup"] label {
+        color: #1e293b !important;
+    }
+    .stRadio div[data-baseweb="radio"] div {
+        border-color: #2563eb !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
