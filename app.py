@@ -521,9 +521,9 @@ if os.path.exists(banner_path):
 elif os.path.exists(fallback_banner):
     st.image(fallback_banner, use_container_width=True)
 else:
+    # Fallback: styled text header (only when no banner images exist)
     st.markdown('<h1 class="neon-title">🧠 Mini AI Agent That Thinks Out Loud</h1>', unsafe_allow_html=True)
-
-st.markdown('<p class="neon-subtitle">CLASSIFY  •  EXTRACT  •  REPLY  •  EXPLAIN</p>', unsafe_allow_html=True)
+    st.markdown('<p class="neon-subtitle">CLASSIFY  •  EXTRACT  •  REPLY  •  EXPLAIN</p>', unsafe_allow_html=True)
 st.divider()
 
 # --- Sample Input Buttons ---
