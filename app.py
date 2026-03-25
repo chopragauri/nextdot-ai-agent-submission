@@ -20,7 +20,6 @@ st.set_page_config(
 )
 
 # --- Sidebar: Theme Toggle + Model Selection ---
-st.sidebar.markdown("## ⚙️ Settings")
 theme_choice = st.sidebar.radio(
     "Theme",
     options=["🌙 Dark", "☀️ Light"],
@@ -510,17 +509,9 @@ else:
     .reasoning-box { color: #374151 !important; }
     /* Subtitle */
     .neon-subtitle { color: #64748b !important; -webkit-text-fill-color: #64748b !important; }
-    /* Spinner / loading text — force visible in light mode */
-    .stSpinner, .stSpinner *,
-    div[data-testid="stSpinner"], div[data-testid="stSpinner"] *,
-    .stAlert, .stAlert *,
-    div[data-testid="stStatusWidget"], div[data-testid="stStatusWidget"] * {
+    /* Streamlit toast/notification */
+    div[data-testid="stNotification"], div[data-testid="stNotification"] * {
         color: #1e293b !important;
-    }
-    /* Spinner icon color */
-    .stSpinner svg, div[data-testid="stSpinner"] svg {
-        fill: #2563eb !important;
-        stroke: #2563eb !important;
     }
     /* Radio buttons (theme selector) */
     .stRadio label span, .stRadio label p,
@@ -658,19 +649,33 @@ if st.button("⚡ Analyze Message", type="primary", use_container_width=True):
         st.error("⚠️ Please enter a customer message to analyze.")
     else:
         try:
+            loading_color = "#a78bfa" if theme else "#6d28d9"
+            loading_html = """
+            <div style="display:flex;align-items:center;gap:12px;padding:18px 0;">
+                <div style="width:28px;height:28px;border:3.5px solid {bg};border-top:3.5px solid {color};border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+                <span style="color:{color};font-size:1.05rem;font-weight:500;">{text}</span>
+            </div>
+            <style>@keyframes spin {{from{{transform:rotate(0deg)}}to{{transform:rotate(360deg)}}}}</style>
+            """
             if compare_mode:
                 col_left, col_right = st.columns(2)
                 with col_left:
-                    with st.spinner(f"Running {selected_model}..."):
-                        result1 = process_message(message, model_name=selected_model)
+                    loader = st.empty()
+                    loader.markdown(loading_html.format(bg="#2a2a3a" if theme else "#e5e7eb", color=loading_color, text=f"Running {selected_model}..."), unsafe_allow_html=True)
+                    result1 = process_message(message, model_name=selected_model)
+                    loader.empty()
                     display_result(result1, title=selected_model)
                 with col_right:
-                    with st.spinner(f"Running {second_model}..."):
-                        result2 = process_message(message, model_name=second_model)
+                    loader2 = st.empty()
+                    loader2.markdown(loading_html.format(bg="#2a2a3a" if theme else "#e5e7eb", color=loading_color, text=f"Running {second_model}..."), unsafe_allow_html=True)
+                    result2 = process_message(message, model_name=second_model)
+                    loader2.empty()
                     display_result(result2, title=second_model)
             else:
-                with st.spinner(f"Analyzing with {selected_model}..."):
-                    result = process_message(message, model_name=selected_model)
+                loader = st.empty()
+                loader.markdown(loading_html.format(bg="#2a2a3a" if theme else "#e5e7eb", color=loading_color, text=f"Analyzing with {selected_model}..."), unsafe_allow_html=True)
+                result = process_message(message, model_name=selected_model)
+                loader.empty()
                 display_result(result)
         except RuntimeError as e:
             if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
