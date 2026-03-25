@@ -516,12 +516,25 @@ banner_name = "banner_dark.png" if theme else "banner_light.png"
 banner_path = os.path.join(os.path.dirname(__file__), "assets", banner_name)
 fallback_banner = os.path.join(os.path.dirname(__file__), "assets", "banner.png")
 
+import base64
+
+def render_banner(path: str, bg_color: str):
+    """Embed banner as base64 inline image for instant loading with matched background."""
+    with open(path, "rb") as f:
+        b64 = base64.b64encode(f.read()).decode()
+    st.markdown(f"""
+    <div style="background:{bg_color}; border-radius:12px; padding:10px 0; margin-bottom:5px; text-align:center;">
+        <img src="data:image/png;base64,{b64}" style="max-width:100%; height:auto; max-height:180px;" />
+    </div>
+    """, unsafe_allow_html=True)
+
+banner_bg = "#0a0a1a" if theme else "#ffffff"
+
 if os.path.exists(banner_path):
-    st.image(banner_path, use_container_width=True)
+    render_banner(banner_path, banner_bg)
 elif os.path.exists(fallback_banner):
-    st.image(fallback_banner, use_container_width=True)
+    render_banner(fallback_banner, banner_bg)
 else:
-    # Fallback: styled text header (only when no banner images exist)
     st.markdown('<h1 class="neon-title">🧠 Mini AI Agent That Thinks Out Loud</h1>', unsafe_allow_html=True)
     st.markdown('<p class="neon-subtitle">CLASSIFY  •  EXTRACT  •  REPLY  •  EXPLAIN</p>', unsafe_allow_html=True)
 st.divider()
