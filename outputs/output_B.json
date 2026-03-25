@@ -1,0 +1,14 @@
+{
+  "classification": {
+    "intent": "query",
+    "sentiment": "neutral"
+  },
+  "extraction": {
+    "customer_name": null,
+    "issue_type": "product inquiry",
+    "urgency_level": "Low",
+    "recommended_action": "Provide product information and trial details"
+  },
+  "reply": "Hello! Thanks for reaching out and showing interest in our AI tool after seeing it on LinkedIn. We're happy to provide more details on how it can benefit small businesses and answer your questions. Yes, we do offer a free trial, and our tool is designed to integrate with various platforms, including WhatsApp, to help streamline your operations. Please let us know if you'd like us to share more specific information or guide you through a demo.",
+  "reasoning": "The intent is classified as 'query' because the customer is asking multiple questions about the AI tool's functionality, trial options, and integration capabilities. The sentiment is 'neutral' as the customer explicitly states they are 'curious' and 'exploring options for now nothing urgent,' indicating an informational, non-urgent inquiry. The reply's tone is helpful and informative, matching the neutral sentiment and addressing all the specific questions asked by the customer. A nuance is the customer's explicit mention of 'nothing urgent,' which helps in setting the urgency level to 'Low' and guides the recommended action to provide information rather than immediate escalation."
+}

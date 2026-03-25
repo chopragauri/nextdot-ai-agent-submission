@@ -1,0 +1,14 @@
+{
+  "classification": {
+    "intent": "complaint",
+    "sentiment": "urgent"
+  },
+  "extraction": {
+    "customer_name": "Rohan Mehta",
+    "issue_type": "Premium plan access and unresponsiveness",
+    "urgency_level": "Critical",
+    "recommended_action": "Escalate to billing/technical team for immediate access provision and follow-up on unresponded emails"
+  },
+  "reply": "Dear Rohan Mehta,\n\nI sincerely apologize for the absolutely unacceptable delay in receiving access to your premium plan (ORD-8821) and the lack of response to your four previous emails after paying Rs 4999. I understand your frustration, especially given your threat to dispute the charge.\n\nThis is a critical issue, and I am immediately escalating your case to our highest priority team to ensure your premium plan access is granted today. We will also investigate why your previous communications were not addressed.\n\nYou will receive an urgent update from us very shortly with a resolution.",
+  "reasoning": "The intent is classified as 'complaint' because the customer expresses extreme dissatisfaction with phrases like 'STILL haven't received', 'absolutely ridiculous', and 'nobody has responded'. The sentiment is 'urgent' due to the immediate threat of action ('if this isnt fixed today im disputing the charge with my bank') and the prolonged issue (3 weeks, 4 unresponded emails) which indicates high frustration and a time-sensitive demand for resolution.\n\nThe tone for the reply is apologetic, reassuring, and action-oriented to match the urgent and negative sentiment, acknowledging the severity of the issue and the customer's frustration while promising immediate resolution. \n\nA nuance noticed is the specific amount paid (Rs 4999) and the order ID (ORD-8821), which are crucial details for investigation and were included in the reply to show full understanding."
+}
