@@ -115,6 +115,6 @@ Type any customer message and see the structured analysis in real-time.
 ## Tech Stack
 
 - **Python 3.9+**
-- **Google Gemini API** (gemini-2.5-flash) — free tier
+- **Google Gemini API**  — free tier
 - **Streamlit** — web UI + cloud deployment
 - **python-dotenv** — environment variable management
