@@ -6,6 +6,7 @@ All steps are handled by the LLM in a single structured call — no hardcoded lo
 
 import json
 import os
+import time
 
 from google import genai
 from google.genai import types
@@ -16,6 +17,11 @@ from prompts import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
 
 # Load API key from .env file
 load_dotenv()
+
+# Expected keys in the pipeline output — used for validation
+EXPECTED_KEYS = {"classification", "extraction", "reply", "reasoning"}
+MAX_RETRIES = 2
+RETRY_DELAY_SECONDS = 3
 
 
 def get_client() -> genai.Client:
@@ -37,16 +43,46 @@ def get_client() -> genai.Client:
     return genai.Client(api_key=api_key)
 
 
+def validate_response(result: dict) -> bool:
+    """Check that the LLM response has all required keys and valid values."""
+    if not isinstance(result, dict):
+        return False
+    if not EXPECTED_KEYS.issubset(result.keys()):
+        return False
+
+    # Validate classification values
+    classification = result.get("classification", {})
+    valid_intents = {"complaint", "query", "feedback", "request", "unknown"}
+    valid_sentiments = {"positive", "neutral", "negative", "urgent"}
+    if classification.get("intent") not in valid_intents:
+        return False
+    if classification.get("sentiment") not in valid_sentiments:
+        return False
+
+    # Validate extraction fields exist
+    extraction = result.get("extraction", {})
+    if "urgency_level" not in extraction or "recommended_action" not in extraction:
+        return False
+
+    return True
+
+
 def process_message(message: str, model_name: str = DEFAULT_MODEL) -> dict:
     """
     Run the full AI agent pipeline on a customer message.
 
+    Sends the message to the LLM with a structured prompt and returns
+    the classified, extracted, and generated response as a dict.
+
     Args:
         message: Raw customer message text.
-        model_name: Gemini model to use (default: gemini-2.0-flash).
+        model_name: Gemini model to use (default: gemini-2.5-flash).
 
     Returns:
         dict with keys: classification, extraction, reply, reasoning.
+
+    Raises:
+        RuntimeError: If the LLM fails after all retries.
     """
     # Handle edge case: empty or whitespace-only input
     if not message or not message.strip():
@@ -64,22 +100,45 @@ def process_message(message: str, model_name: str = DEFAULT_MODEL) -> dict:
 
     # Build the user prompt with the customer message
     user_prompt = USER_PROMPT_TEMPLATE.format(message=message)
-
-    # Create client and send request with JSON output mode
     client = get_client()
-    response = client.models.generate_content(
-        model=model_name,
-        contents=user_prompt,
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
-            response_mime_type="application/json",
-            temperature=0.7,
-        ),
-    )
 
-    # Parse and return the structured JSON response
-    result = json.loads(response.text)
-    return result
+    # Retry loop — handles transient API errors and malformed responses
+    last_error = None
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=user_prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    response_mime_type="application/json",
+                    temperature=0.7,
+                ),
+            )
+
+            result = json.loads(response.text)
+
+            # Validate the response structure before returning
+            if validate_response(result):
+                return result
+            else:
+                last_error = "Response missing required fields or has invalid values"
+                print(f"[Attempt {attempt + 1}] Validation failed: {last_error}")
+
+        except json.JSONDecodeError as e:
+            last_error = f"JSON parse error: {e}"
+            print(f"[Attempt {attempt + 1}] {last_error}")
+        except Exception as e:
+            last_error = str(e)
+            print(f"[Attempt {attempt + 1}] API error: {last_error}")
+
+        # Wait before retrying (skip delay on last attempt)
+        if attempt < MAX_RETRIES:
+            time.sleep(RETRY_DELAY_SECONDS)
+
+    raise RuntimeError(
+        f"Pipeline failed after {MAX_RETRIES + 1} attempts. Last error: {last_error}"
+    )
 
 
 if __name__ == "__main__":
