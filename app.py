@@ -466,10 +466,12 @@ else:
         border: 1.5px solid #d1d5db !important;
         color: #1e293b !important;
         border-radius: 10px !important;
+        caret-color: #1e293b !important;
     }
     .stTextArea textarea:focus {
         border-color: #2563eb !important;
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+        caret-color: #2563eb !important;
     }
     /* Label text */
     .stTextArea label p, .stSelectbox label p {
